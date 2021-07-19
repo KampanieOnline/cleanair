@@ -1,6 +1,8 @@
+import 'package:clean_air/MyHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'PermissionScreen.dart';
 import 'main.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,12 +13,24 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    new Future.delayed(
+        const Duration(seconds: 2),
+        () => {
+              if (havePermissionToAsk())
+                {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PermissionScreen()))
+                }
+              else
+                {
+                  //todo load data
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()))
+                }
+            });
+
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: <Widget>[
         Container(
@@ -64,12 +78,16 @@ class _SplashScreenState extends State<SplashScreen> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w300,
                     fontSize: 18.0,
                     color: Colors.white,
                   ))),
             ))
       ]), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  bool havePermissionToAsk() {
+    return true;
   }
 }
