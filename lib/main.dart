@@ -1,4 +1,3 @@
-import 'package:clean_air/PermissionScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'SplashScreen.dart';
@@ -8,17 +7,15 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: Strings.appTitle,
-      theme: ThemeData(
-       primarySwatch: Colors.blue,
-      ),
-      home: SplashScreen()
-    );
+        title: Strings.appTitle,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: SplashScreen());
   }
 }
 
