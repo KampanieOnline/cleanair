@@ -1,6 +1,9 @@
-import 'package:clean_air/MyHomePage.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather/weather.dart';
 
 import 'PermissionScreen.dart';
 import 'main.dart';
@@ -13,24 +16,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    new Future.delayed(
-        const Duration(seconds: 2),
-        () => {
-              if (havePermissionToAsk())
-                {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PermissionScreen()))
-                }
-              else
-                {
-                  //todo load data
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()))
-                }
-            });
-
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: <Widget>[
         Container(
@@ -54,18 +39,18 @@ class _SplashScreenState extends State<SplashScreen> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 42.0,
-                      color: Colors.white,
-                    ))),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 42.0,
+                          color: Colors.white,
+                        ))),
                 Padding(padding: EdgeInsets.only(top: 5.0)),
                 Text('Aplikacja do monitorowania \n czystości powietrza',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
-                    ))),
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ))),
               ],
             )),
         Positioned(
@@ -78,16 +63,37 @@ class _SplashScreenState extends State<SplashScreen> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 18.0,
-                    color: Colors.white,
-                  ))),
+                        fontWeight: FontWeight.w300,
+                        fontSize: 18.0,
+                        color: Colors.white,
+                      ))),
             ))
       ]), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  bool havePermissionToAsk() {
-    return true;
+  @override
+  void initState() {
+    super.initState();
+    if (permissionDenied()) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PermissionScreen()));
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        executeOnceAfterBuild();
+      });
+    }
+  }
+
+  bool permissionDenied() {
+    return false;
+  }
+
+  void executeOnceAfterBuild() async {
+    WeatherFactory wf = new WeatherFactory("b9b26b0a2dc98163b8412c022f815653",
+        language: Language.POLISH);
+    Weather w = await wf.currentWeatherByCityName("Lublin");
+    log(w.toJson().toString());
+    //todo Navigotor.push...
   }
 }
