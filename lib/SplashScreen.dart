@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:clean_air/MyHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,18 +40,18 @@ class _SplashScreenState extends State<SplashScreen> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 42.0,
-                          color: Colors.white,
-                        ))),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 42.0,
+                      color: Colors.white,
+                    ))),
                 Padding(padding: EdgeInsets.only(top: 5.0)),
                 Text('Aplikacja do monitorowania \n czystości powietrza',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ))),
+                      fontSize: 16.0,
+                      color: Colors.white,
+                    ))),
               ],
             )),
         Positioned(
@@ -63,10 +64,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 18.0,
-                        color: Colors.white,
-                      ))),
+                    fontWeight: FontWeight.w300,
+                    fontSize: 18.0,
+                    color: Colors.white,
+                  ))),
             ))
       ]), // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -94,6 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
         language: Language.POLISH);
     Weather w = await wf.currentWeatherByCityName("Lublin");
     log(w.toJson().toString());
-    //todo Navigotor.push...
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => MyHomePage(weather: w)));
   }
 }
