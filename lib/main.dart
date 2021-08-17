@@ -1,6 +1,5 @@
+import 'package:clean_air/MyHomePage.dart';
 import 'package:flutter/material.dart';
-
-import 'SplashScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: SplashScreen());
+        home: MyHomePage());
   }
 }
 
