@@ -42,18 +42,18 @@ class _SplashScreenState extends State<SplashScreen> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 42.0,
-                      color: Colors.white,
-                    ))),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 42.0,
+                          color: Colors.white,
+                        ))),
                 Padding(padding: EdgeInsets.only(top: 5.0)),
                 Text('Aplikacja do monitorowania \n czystości powietrza',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                         textStyle: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
-                    ))),
+                          fontSize: 16.0,
+                          color: Colors.white,
+                        ))),
               ],
             )),
         Positioned(
@@ -66,10 +66,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.lato(
                       textStyle: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 18.0,
-                    color: Colors.white,
-                  ))),
+                        fontWeight: FontWeight.w300,
+                        fontSize: 18.0,
+                        color: Colors.white,
+                      ))),
             ))
       ]), // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -95,13 +95,27 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void executeOnceAfterBuild() async {
+    Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.lowest,
+        forceAndroidLocationManager: true,
+        timeLimit: Duration(seconds: 5))
+        .then((value) => { loadLocationData(value)})
+        .onError((error, stackTrace) => {
+          Geolocator.getLastKnownPosition(forceAndroidLocationManager: true)
+      .then((value) => {loadLocationData(value)})
+    });
+  }
+
+  loadLocationData(Position value) async {
+    var lat = value.latitude;
+    var lon = value.longitude;
+    log(lat.toString() + "x" + lon.toString());
+
     WeatherFactory wf = new WeatherFactory("b9b26b0a2dc98163b8412c022f815653",
         language: Language.POLISH);
-    Weather w = await wf.currentWeatherByCityName("Lublin");
+    Weather w = await wf.currentWeatherByLocation(lat, lon);
     log(w.toJson().toString());
 
-    var lat = 51.236686;
-    var lon = 22.544199;
     var keyword = 'geo:$lat;$lon';
     String _endpoint = 'https://api.waqi.info/feed/';
     var key = '2130cefcb71430d9beddbee37cff2bbc2fcb2abc';
@@ -116,7 +130,10 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => MyHomePage(weather: w, air: aq)));
+            builder: (context) => MyHomePage(weather: w, air: aq
+            )
+        )
+    );
   }
 }
 
