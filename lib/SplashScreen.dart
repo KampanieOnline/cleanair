@@ -111,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
     AirQuality aq = new AirQuality(jsonBody);
 
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => MyHomePage(weather: w)));
+        MaterialPageRoute(builder: (context) => MyHomePage(weather: w, air: aq)));
   }
 }
 
@@ -137,9 +137,11 @@ class AirQuality {
     if (aqi <= 100){
       quality = "Bardzo dobra";
       advice = "Skorzystaj z dobrego powietrzaa i wyjdź na spacer";
+      isGood = true;
     } else if (aqi <= 150){
       quality = "Nie za dobra";
       advice = "Jeśli tylko możesz zostań w domu, załatwiaj sprawy online";
+      isBad = true;
     } else {
       quality = "Bardzo zła!";
       advice = "Zdecydowanie zostań w domu i załatwiaj sprawy online!";
