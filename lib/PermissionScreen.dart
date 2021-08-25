@@ -1,5 +1,7 @@
 import 'package:clean_air/MyHomePage.dart';
+import 'package:clean_air/SplashScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'main.dart';
@@ -75,12 +77,16 @@ class _PermissionScreenState extends State<PermissionScreen> {
                       'Zgoda!',
                       style: TextStyle(fontSize: 16.0, color: Colors.black),
                     ),
-                    onPressed: () {
-                      //todo ask for permissions
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyHomePage()));
+                    onPressed: () async {
+                      LocationPermission permission =
+                          await Geolocator.requestPermission();
+                      if (permission == LocationPermission.always ||
+                          permission == LocationPermission.whileInUse) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SplashScreen()));
+                      }
                     },
                   )),
             ))

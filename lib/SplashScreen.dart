@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:clean_air/MyHomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather/weather.dart';
 import 'package:http/http.dart' as http;
@@ -77,7 +78,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    if (permissionDenied()) {
+    checkPermission();
+  }
+
+  checkPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => PermissionScreen()));
     } else {
@@ -85,10 +92,6 @@ class _SplashScreenState extends State<SplashScreen> {
         executeOnceAfterBuild();
       });
     }
-  }
-
-  bool permissionDenied() {
-    return false;
   }
 
   void executeOnceAfterBuild() async {
@@ -110,8 +113,10 @@ class _SplashScreenState extends State<SplashScreen> {
     Map<String, dynamic> jsonBody = json.decode(response.body);
     AirQuality aq = new AirQuality(jsonBody);
 
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => MyHomePage(weather: w, air: aq)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyHomePage(weather: w, air: aq)));
   }
 }
 
@@ -134,11 +139,11 @@ class AirQuality {
   }
 
   void setupLevel(int aqi) {
-    if (aqi <= 100){
+    if (aqi <= 100) {
       quality = "Bardzo dobra";
       advice = "Skorzystaj z dobrego powietrzaa i wyjdź na spacer";
       isGood = true;
-    } else if (aqi <= 150){
+    } else if (aqi <= 150) {
       quality = "Nie za dobra";
       advice = "Jeśli tylko możesz zostań w domu, załatwiaj sprawy online";
       isBad = true;
